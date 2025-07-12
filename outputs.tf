@@ -112,5 +112,5 @@ output "servicemonitor_created" {
 
   output "servicemonitor_name" {
     description = "Name of the ServiceMonitor for Spacelift exporter"
-    value       = var.enable_servicemonitor ? kubernetes_manifest.spacelift_servicemonitor[0].metadata.0.name : null
+    value       = var.enable_servicemonitor ? kubernetes_manifest.spacelift_exporter_servicemonitor[0].metadata.0.name : null
   }
