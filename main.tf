@@ -17,10 +17,6 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 2.12"
     }
-    time = {
-      source  = "hashicorp/time"
-      version = "~> 0.9"
-    }
   }
 }
 
@@ -379,55 +375,8 @@ resource "kubernetes_service" "spacelift_exporter" {
   depends_on = [kubernetes_deployment.spacelift_exporter]
 }
 
-# Wait for Prometheus Operator CRDs to be available
-resource "time_sleep" "wait_for_prometheus_crds" {
-  count = var.enable_spacelift_exporter && var.enable_prometheus ? 1 : 0
-
-  depends_on = [helm_release.prometheus]
-
-  create_duration = "30s"
-}
-
-# ServiceMonitor for Prometheus to scrape Spacelift Exporter
-resource "kubernetes_manifest" "spacelift_exporter_servicemonitor" {
-  count = var.enable_spacelift_exporter && var.enable_prometheus ? 1 : 0
-
-  manifest = {
-    apiVersion = "monitoring.coreos.com/v1"
-    kind       = "ServiceMonitor"
-    metadata = {
-      name      = "spacelift-exporter"
-      namespace = kubernetes_namespace.monitoring.metadata[0].name
-      labels = {
-        "app.kubernetes.io/name"      = "spacelift-exporter"
-        "app.kubernetes.io/component" = "exporter"
-        "prometheus"                  = "kube-prometheus"
-      }
-    }
-    spec = {
-      selector = {
-        matchLabels = {
-          "app.kubernetes.io/name"      = "spacelift-exporter"
-          "app.kubernetes.io/component" = "exporter"
-        }
-      }
-      endpoints = [
-        {
-          port           = "metrics"
-          interval       = var.prometheus_scrape_interval
-          path           = "/metrics"
-          scrapeTimeout  = "30s"
-        }
-      ]
-    }
-  }
-
-  depends_on = [
-    kubernetes_service.spacelift_exporter,
-    helm_release.prometheus,
-    time_sleep.wait_for_prometheus_crds
-  ]
-}
+# Note: ServiceMonitor is not needed as Spacelift exporter is configured 
+# via additionalScrapeConfigs in the Prometheus Helm values template
 
 # Network Policy for monitoring namespace (if enabled)
 resource "kubernetes_network_policy" "monitoring" {

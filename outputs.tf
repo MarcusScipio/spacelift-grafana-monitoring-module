@@ -104,13 +104,8 @@ output "spacelift_secret_name" {
   value       = var.create_spacelift_secret ? kubernetes_secret.spacelift_api[0].metadata[0].name : var.existing_spacelift_secret_name
 }
 
-# ServiceMonitor Information
-output "servicemonitor_created" {
-  description = "Whether ServiceMonitor for Spacelift exporter was created"
+# Scraping Configuration Information
+output "prometheus_scraping_configured" {
+  description = "Whether Prometheus is configured to scrape Spacelift exporter via additionalScrapeConfigs"
   value       = var.enable_spacelift_exporter && var.enable_prometheus
-}
-
-output "servicemonitor_name" {
-  description = "Name of the ServiceMonitor for Spacelift exporter"
-  value       = var.enable_spacelift_exporter && var.enable_prometheus ? kubernetes_manifest.spacelift_exporter_servicemonitor[0].manifest.metadata.name : null
 }
