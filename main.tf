@@ -180,6 +180,10 @@ resource "helm_release" "prometheus" {
     evaluation_interval   = var.prometheus_evaluation_interval
   })]
 
+  timeout = 600
+  wait    = true
+  wait_for_jobs = true
+
   depends_on = [
     kubernetes_namespace.monitoring,
     kubernetes_service_account.monitoring,
@@ -412,7 +416,7 @@ resource "kubernetes_network_policy" "monitoring" {
     }
 
     egress {
-      to {}
+      # Allow all egress traffic (pods can communicate outbound)
     }
   }
 
