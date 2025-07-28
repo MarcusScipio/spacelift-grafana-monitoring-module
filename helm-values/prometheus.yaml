@@ -14,9 +14,10 @@ commonLabels:
 # Prometheus Operator Configuration
 prometheusOperator:
   enabled: true
-  serviceAccount:
-    create: false
-    name: "${service_account}"
+  # Let the operator create its own service account to avoid permission issues
+  # serviceAccount:
+  #   create: false
+  #   name: "${service_account}"
   
   # Security Context
   securityContext:
@@ -68,10 +69,10 @@ prometheus:
       fsGroup: 65534
       runAsGroup: 65534
     
-    # Service Account
-    serviceAccount:
-      create: false
-      name: "${service_account}"
+    # Service Account - let Prometheus create its own for now
+    # serviceAccount:
+    #   create: false
+    #   name: "${service_account}"
     
     # External URL
     externalUrl: "${external_url}"
@@ -101,13 +102,14 @@ prometheus:
     probeNamespaceSelector: {}
     
     # Additional Scrape Configs for Spacelift Exporter
-    additionalScrapeConfigs:
-      - job_name: 'spacelift-exporter'
-        static_configs:
-          - targets: ['spacelift-exporter.${namespace}.svc.cluster.local:9953']
-        scrape_interval: ${scrape_interval}
-        scrape_timeout: 30s
-        metrics_path: /metrics
+    # Temporarily disabled to troubleshoot deployment issues
+    # additionalScrapeConfigs:
+    #   - job_name: 'spacelift-exporter'
+    #     static_configs:
+    #       - targets: ['spacelift-exporter.${namespace}.svc.cluster.local:9953']
+    #     scrape_interval: ${scrape_interval}
+    #     scrape_timeout: 30s
+    #     metrics_path: /metrics
         
     # Pod Anti-Affinity for HA
     affinity:
@@ -159,7 +161,7 @@ grafana:
   enabled: true
   
   # Admin Configuration
-  adminPassword: "admin123!" # Should be changed in production
+  adminPassword: "prom-operator" # Default password for admin user
   
   # Storage Configuration
   persistence:

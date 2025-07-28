@@ -180,7 +180,7 @@ resource "helm_release" "prometheus" {
     evaluation_interval   = var.prometheus_evaluation_interval
   })]
 
-  timeout = 600
+  timeout = 2400
   wait    = true
   wait_for_jobs = true
 
