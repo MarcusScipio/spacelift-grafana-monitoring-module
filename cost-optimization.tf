@@ -27,11 +27,8 @@ resource "kubernetes_resource_quota" "monitoring" {
       "secrets"         = "50"
     }
 
-    scope_selector {
-      scope_name = "PriorityClass"
-      operator   = "In"
-      values     = ["high", "medium", "low"]
-    }
+    # ResourceQuota scopes (optional)
+    scopes = ["NotTerminating"]
   }
 
   depends_on = [kubernetes_namespace.monitoring]
