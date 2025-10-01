@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gcloud container clusters list:*)",
+      "Bash(gcloud config get-value:*)",
+      "Bash(gcloud container clusters describe:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
