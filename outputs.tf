@@ -57,8 +57,8 @@ output "grafana_external_url" {
   value       = var.enable_ingress && var.grafana_external_url != "" ? var.grafana_external_url : null
 }
 
-output "grafana_admin_secret_name" {
-  description = "Name of the Kubernetes secret containing Grafana admin credentials"
+output "grafana_default_admin_secret" {
+  description = "Name of the default Kubernetes secret containing Grafana admin credentials (from Helm chart)"
   value       = var.enable_prometheus ? "prometheus-grafana" : null
 }
 
@@ -134,7 +134,7 @@ output "network_policy_name" {
 
 # Grafana Admin Credentials Information
 output "grafana_admin_secret_name" {
-  description = "Name of the Kubernetes secret containing Grafana admin credentials"
+  description = "Name of the custom Kubernetes secret containing Grafana admin credentials"
   value       = var.enable_prometheus ? kubernetes_secret.grafana_admin[0].metadata[0].name : null
 }
 
