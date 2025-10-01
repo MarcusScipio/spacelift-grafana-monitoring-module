@@ -14,10 +14,9 @@ commonLabels:
 # Prometheus Operator Configuration
 prometheusOperator:
   enabled: true
-  # Let the operator create its own service account to avoid permission issues
-  # serviceAccount:
-  #   create: false
-  #   name: "${service_account}"
+  # Let the operator create and manage its own service account
+  serviceAccount:
+    create: true
   
   # Security Context
   securityContext:
@@ -69,10 +68,9 @@ prometheus:
       fsGroup: 65534
       runAsGroup: 65534
     
-    # Service Account - let Prometheus create its own for now
-    # serviceAccount:
-    #   create: false
-    #   name: "${service_account}"
+    # Service Account - let Prometheus create its own
+    serviceAccount:
+      create: true
     
     # External URL
     externalUrl: "${external_url}"
@@ -101,15 +99,14 @@ prometheus:
     probeSelector: {}
     probeNamespaceSelector: {}
     
-    # Additional Scrape Configs for Spacelift Exporter
-    # Temporarily disabled to troubleshoot deployment issues
-    # additionalScrapeConfigs:
-    #   - job_name: 'spacelift-exporter'
-    #     static_configs:
-    #       - targets: ['spacelift-exporter.${namespace}.svc.cluster.local:9953']
-    #     scrape_interval: ${scrape_interval}
-    #     scrape_timeout: 30s
-    #     metrics_path: /metrics
+    # Additional Scrape Configs for Spacelift Exporter (backup if ServiceMonitor doesn't work)
+    additionalScrapeConfigs:
+      - job_name: 'spacelift-exporter'
+        static_configs:
+          - targets: ['spacelift-exporter.${namespace}.svc.cluster.local:9953']
+        scrape_interval: ${scrape_interval}
+        scrape_timeout: 30s
+        metrics_path: /metrics
         
     # Pod Anti-Affinity for HA
     affinity:
@@ -160,8 +157,11 @@ prometheus:
 grafana:
   enabled: true
   
-  # Admin Configuration
-  adminPassword: "prom-operator" # Default password for admin user
+  # Admin Configuration - password will be set from existing secret
+  admin:
+    existingSecret: "grafana-admin-credentials"
+    userKey: admin-user
+    passwordKey: admin-password
   
   # Storage Configuration
   persistence:
@@ -171,10 +171,9 @@ grafana:
     accessModes:
       - ReadWriteOnce
   
-  # Service Account
+  # Service Account - let Grafana create its own
   serviceAccount:
-    create: false
-    name: "${service_account}"
+    create: true
   
   # Security Context
   securityContext:
@@ -320,19 +319,17 @@ alertmanager:
       runAsUser: 65534
       fsGroup: 65534
     
-    # Service Account
+    # Service Account - let AlertManager create its own
     serviceAccount:
-      create: false
-      name: "${service_account}"
+      create: true
 
 # Node Exporter Configuration
 nodeExporter:
   enabled: true
   
-  # Service Account
+  # Service Account - let nodeExporter create its own
   serviceAccount:
-    create: false
-    name: "${service_account}"
+    create: true
 
 # Kube State Metrics Configuration
 kubeStateMetrics:

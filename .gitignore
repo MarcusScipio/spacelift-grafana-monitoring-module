@@ -1,0 +1,95 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate.d/
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Variable files with sensitive data
+*.auto.tfvars
+*.auto.tfvars.json
+terraform.tfvars
+terraform.tfvars.json
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.code-workspace
+.history/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.AppleDouble
+.LSOverride
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+
+# Log files
+*.log
+
+# Environment variables file
+.env
+.env.local
+.env.*.local
+
+# Credentials and secrets
+**/credentials.json
+**/service-account.json
+**/*.pem
+**/*.key
+**/*.crt
+**/*.p12
+secrets/
+.secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+ENV/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation build files
+docs/_build/
+site/
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Spacelift specific
+.spacelift/
+spacelift.yaml.backup
+
+# Kubernetes secrets
+*-secret.yaml
+*-secrets.yaml
+
+# Helm
+charts/*.tgz
+requirements.lock
